@@ -2,28 +2,10 @@ provider "aws" {
   region = var.region
 }
 
-# Launch Template
-resource "aws_launch_template" "this" {
-  name_prefix   = "${var.project_name}-lt-"
-  image_id      = var.ami_id
-  instance_type = var.instance_type
-  key_name = var.key_name
- #vpc_security_group_ids = var.security_group_ids
-  vpc_security_group_ids = [aws_security_group.asg_sg.id]
-
-  tag_specifications {
-    resource_type = "instance"
-    tags = {
-      Name = "${var.project_name}-ec2"
-    }
-  }
-}
-
 resource "aws_security_group" "asg_sg" {
   name        = "${var.project_name}-sg"
   description = "Security Group for EC2 Auto Scaling Group"
   vpc_id      = var.vpc_id
-  #vpc_security_group_ids = var.security_group_ids
 
   ingress {
     description = "Allow HTTP"
@@ -54,8 +36,22 @@ resource "aws_security_group" "asg_sg" {
   }
 }
 
+resource "aws_launch_template" "this" {
+  name_prefix   = "${var.project_name}-lt-"
+  image_id      = var.ami_id
+  instance_type = var.instance_type
+  key_name      = var.key_name
 
-# Auto Scaling Group
+  vpc_security_group_ids = [aws_security_group.asg_sg.id]
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name = "${var.project_name}-ec2"
+    }
+  }
+}
+
 resource "aws_autoscaling_group" "this" {
   name                      = "${var.project_name}-asg"
   min_size                  = var.min_size
@@ -70,7 +66,7 @@ resource "aws_autoscaling_group" "this" {
     version = "$Latest"
   }
 
-  force_delete           = true
+  force_delete              = true
   wait_for_capacity_timeout = "0"
 
   tag {
