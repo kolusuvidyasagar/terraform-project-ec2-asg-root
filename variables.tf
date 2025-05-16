@@ -42,3 +42,7 @@ variable "key_name" {
   description = "Name of the EC2 Key Pair"
   type        = string
 }
+variable "security_group_ids" {
+  description = "List of security group IDs to associate with the launch template"
+  type        = list(string)
+}
