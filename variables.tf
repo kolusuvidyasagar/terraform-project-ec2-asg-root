@@ -34,10 +34,6 @@ variable "subnet_ids" {
   description = "List of subnet IDs for the ASG"
 }
 
-variable "security_group_ids" {
-  type = list(string)
-  description = "Security group IDs"
-}
 variable "vpc_id" {
   description = "VPC ID for the Security Group"
   type        = string
