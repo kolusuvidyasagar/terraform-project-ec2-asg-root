@@ -23,6 +23,7 @@ resource "aws_security_group" "asg_sg" {
   name        = "${var.project_name}-sg"
   description = "Security Group for EC2 Auto Scaling Group"
   vpc_id      = var.vpc_id
+  vpc_security_group_ids = var.security_group_ids
 
   ingress {
     description = "Allow HTTP"
